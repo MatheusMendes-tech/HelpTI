@@ -1,0 +1,485 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "channels_WebChatChannel_enablePreview": {
+            "type": "Bool"
+        },
+        "sites_HelpTI_name": {
+            "defaultValue": "HelpTI",
+            "type": "String"
+        },
+        "sites_helpti_bot_name": {
+            "defaultValue": "helpti-bot",
+            "type": "String"
+        },
+        "serverfarms_HelpTI_name": {
+            "defaultValue": "HelpTI",
+            "type": "String"
+        },
+        "components_HelpTI_ai_name": {
+            "defaultValue": "HelpTI-ai",
+            "type": "String"
+        },
+        "botServices_helpti_bot_name": {
+            "defaultValue": "helpti-bot",
+            "type": "String"
+        },
+        "accounts_HelpTI_name": {
+            "defaultValue": "HelpTI",
+            "type": "String"
+        },
+        "components_helpti_bot24yx53_name": {
+            "defaultValue": "helpti-bot24yx53",
+            "type": "String"
+        },
+        "searchServices_helpti_asefgcgubjthcou_name": {
+            "defaultValue": "helpti-asefgcgubjthcou",
+            "type": "String"
+        },
+        "actionGroups_Application_Insights_Smart_Detection_name": {
+            "defaultValue": "Application Insights Smart Detection",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.BotService/botServices",
+            "apiVersion": "2020-06-02",
+            "name": "[parameters('botServices_helpti_bot_name')]",
+            "location": "global",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "sdk",
+            "properties": {
+                "displayName": "[parameters('botServices_helpti_bot_name')]",
+                "iconUrl": "https://docs.botframework.com/static/devportal/client/images/bot-framework-default.png",
+                "endpoint": "[concat('https://', parameters('botServices_helpti_bot_name'), '.azurewebsites.net/api/messages')]",
+                "msaAppId": "a4fadf55-08ac-4610-b5b6-c0397529841a",
+                "developerAppInsightKey": "02149038-2d02-4676-b33c-08676ff7349c",
+                "developerAppInsightsApplicationId": "22764933-ad99-43ff-8209-d9cee923e861",
+                "luisAppIds": []
+            }
+        },
+        {
+            "type": "Microsoft.CognitiveServices/accounts",
+            "apiVersion": "2017-04-18",
+            "name": "[parameters('accounts_HelpTI_name')]",
+            "location": "westus",
+            "sku": {
+                "name": "F0"
+            },
+            "kind": "QnAMaker",
+            "properties": {
+                "apiProperties": {
+                    "qnaRuntimeEndpoint": "https://helpti.azurewebsites.net"
+                },
+                "customSubDomainName": "helpti",
+                "privateEndpointConnections": [],
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "microsoft.insights/actionGroups",
+            "apiVersion": "2019-03-01",
+            "name": "[parameters('actionGroups_Application_Insights_Smart_Detection_name')]",
+            "location": "Global",
+            "properties": {
+                "groupShortName": "SmartDetect",
+                "enabled": true,
+                "emailReceivers": [],
+                "smsReceivers": [],
+                "webhookReceivers": [],
+                "itsmReceivers": [],
+                "azureAppPushReceivers": [],
+                "automationRunbookReceivers": [],
+                "voiceReceivers": [],
+                "logicAppReceivers": [],
+                "azureFunctionReceivers": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[parameters('components_HelpTI_ai_name')]",
+            "location": "brazilsouth",
+            "tags": {
+                "hidden-link:/subscriptions/e8c006c3-9f24-4ac2-b2bb-16470ced7b02/resourceGroups/HelpTi/providers/Microsoft.Web/sites/HelpTI": "Resource"
+            },
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "RetentionInDays": 90,
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[parameters('components_helpti_bot24yx53_name')]",
+            "location": "brazilsouth",
+            "tags": {
+                "hidden-link:/subscriptions/e8c006c3-9f24-4ac2-b2bb-16470ced7b02/resourceGroups/HelpTi/providers/Microsoft.BotService/botServices/helpti-bot": "Resource",
+                "hidden-link:/subscriptions/e8c006c3-9f24-4ac2-b2bb-16470ced7b02/resourceGroups/HelpTi/providers/Microsoft.Web/sites/helpti-bot": "Resource"
+            },
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "RetentionInDays": 90,
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Search/searchServices",
+            "apiVersion": "2020-08-01",
+            "name": "[parameters('searchServices_helpti_asefgcgubjthcou_name')]",
+            "location": "Brazil South",
+            "sku": {
+                "name": "free"
+            },
+            "properties": {
+                "replicaCount": 1,
+                "partitionCount": 1,
+                "hostingMode": "Default",
+                "publicNetworkAccess": "Enabled",
+                "networkRuleSet": {
+                    "ipRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2018-02-01",
+            "name": "[parameters('serverfarms_HelpTI_name')]",
+            "location": "Brazil South",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "size": "S1",
+                "family": "S",
+                "capacity": 1
+            },
+            "kind": "app",
+            "properties": {
+                "perSiteScaling": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices/channels",
+            "apiVersion": "2020-06-02",
+            "name": "[concat(parameters('botServices_helpti_bot_name'), '/MsTeamsChannel')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.BotService/botServices', parameters('botServices_helpti_bot_name'))]"
+            ],
+            "properties": {
+                "properties": {
+                    "enableCalling": false,
+                    "isEnabled": true
+                },
+                "channelName": "MsTeamsChannel"
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices/channels",
+            "apiVersion": "2020-06-02",
+            "name": "[concat(parameters('botServices_helpti_bot_name'), '/WebChatChannel')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.BotService/botServices', parameters('botServices_helpti_bot_name'))]"
+            ],
+            "properties": {
+                "properties": {
+                    "sites": [
+                        {
+                            "siteName": "Default Site",
+                            "isEnabled": true,
+                            "enablePreview": "[parameters('channels_WebChatChannel_enablePreview')]"
+                        }
+                    ]
+                },
+                "channelName": "WebChatChannel"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('sites_HelpTI_name')]",
+            "location": "Brazil South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_HelpTI_name'))]"
+            ],
+            "tags": {
+                "hidden-related:/subscriptions/e8c006c3-9f24-4ac2-b2bb-16470ced7b02/resourcegroups/HelpTi/providers/Microsoft.Web/serverfarms/HelpTI": "empty"
+            },
+            "kind": "app",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "helpti.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "helpti.scm.azurewebsites.net",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_HelpTI_name'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {},
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('sites_helpti_bot_name')]",
+            "location": "Brazil South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_HelpTI_name'))]"
+            ],
+            "kind": "app",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_helpti_bot_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_helpti_bot_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_HelpTI_name'))]",
+                "reserved": false,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {},
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": true,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_HelpTI_name'), '/web')]",
+            "location": "Brazil South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_HelpTI_name'))]"
+            ],
+            "tags": {
+                "hidden-related:/subscriptions/e8c006c3-9f24-4ac2-b2bb-16470ced7b02/resourcegroups/HelpTi/providers/Microsoft.Web/serverfarms/HelpTI": "empty"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "phpVersion": "5.6",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$HelpTI",
+                "azureStorageAccounts": {},
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": false,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "cors": {
+                    "allowedOrigins": [
+                        "*"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "ftpsState": "AllAllowed",
+                "reservedInstanceCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_helpti_bot_name'), '/web')]",
+            "location": "Brazil South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_helpti_bot_name'))]"
+            ],
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "phpVersion": "5.6",
+                "requestTracingEnabled": false,
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": false,
+                "publishingUsername": "$helpti-bot",
+                "azureStorageAccounts": {},
+                "scmType": "None",
+                "use32BitWorkerProcess": true,
+                "webSocketsEnabled": true,
+                "alwaysOn": false,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": false
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "cors": {
+                    "allowedOrigins": [
+                        "https://portal.azure.com",
+                        "https://botservice.hosting.portal.azure.net",
+                        "https://botservice-ms.hosting.portal.azure.net",
+                        "https://hosting.onecloud.azure-test.net/"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 1,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "ftpsState": "AllAllowed",
+                "reservedInstanceCount": 0
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_HelpTI_name'), '/', parameters('sites_HelpTI_name'), '.azurewebsites.net')]",
+            "location": "Brazil South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_HelpTI_name'))]"
+            ],
+            "properties": {
+                "siteName": "HelpTI",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2018-11-01",
+            "name": "[concat(parameters('sites_helpti_bot_name'), '/', parameters('sites_helpti_bot_name'), '.azurewebsites.net')]",
+            "location": "Brazil South",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_helpti_bot_name'))]"
+            ],
+            "properties": {
+                "siteName": "helpti-bot",
+                "hostNameType": "Verified"
+            }
+        }
+    ]
+}

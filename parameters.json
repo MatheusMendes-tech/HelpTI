@@ -1,0 +1,36 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "channels_WebChatChannel_enablePreview": {
+            "value": null
+        },
+        "sites_HelpTI_name": {
+            "value": null
+        },
+        "sites_helpti_bot_name": {
+            "value": null
+        },
+        "serverfarms_HelpTI_name": {
+            "value": null
+        },
+        "components_HelpTI_ai_name": {
+            "value": null
+        },
+        "botServices_helpti_bot_name": {
+            "value": null
+        },
+        "accounts_HelpTI_name": {
+            "value": null
+        },
+        "components_helpti_bot24yx53_name": {
+            "value": null
+        },
+        "searchServices_helpti_asefgcgubjthcou_name": {
+            "value": null
+        },
+        "actionGroups_Application_Insights_Smart_Detection_name": {
+            "value": null
+        }
+    }
+}
